@@ -9,10 +9,18 @@ const errorMiddleware = async (
   next: NextFunction
 ) => {
   if (err instanceof ResponseError) {
-    res.status(err.status).json({ errors: err.message, message: err.message }).end();
+    res.status(err.status).json({
+      status: err.status,
+      data: null,
+      message: err.message,
+    }).end();
   } else {
     logger.error(err);
-    res.status(500).json({ errors: "Internal Server Error" }).end();
+    res.status(500).json({
+      status: 500,
+      data: null,
+      message: "Internal Server Error",
+    }).end();
   }
 };
 

@@ -1,2 +1,67 @@
+@baseUrl = http://localhost:3000/api
+@token = {{login.response.body.data.token}}
+
+### Health Check
 GET http://localhost:3000/health
+Accept: application/json
+
+### Register
+# @name register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Jean R",
+  "email": "jean@example.com",
+  "password": "password123"
+}
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "jean@example.com",
+  "password": "password123"
+}
+
+### Create Wallet
+POST {{baseUrl}}/wallets
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "BCA Main Account",
+  "type": "BANK",
+  "balance": 10000000
+}
+
+### List Wallets
+GET {{baseUrl}}/wallets
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Get Wallet by ID
+GET {{baseUrl}}/wallets/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Update Wallet
+PATCH {{baseUrl}}/wallets/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "BCA Payroll Account",
+  "type": "BANK"
+}
+
+### Delete Wallet
+DELETE {{baseUrl}}/wallets/1
+Authorization: Bearer {{token}}
 Accept: application/json

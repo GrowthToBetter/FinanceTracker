@@ -3,12 +3,13 @@ import { logger } from "./logging.js";
 
 declare global {
   interface BigInt {
-    toJSON(): string;
+    toJSON(): number | string;
   }
 }
 
-BigInt.prototype.toJSON = function (): string {
-  return this.toString();
+BigInt.prototype.toJSON = function (): number | string {
+  const num = Number(this);
+  return Number.isSafeInteger(num) ? num : this.toString();
 };
 
 export const prismaClient = new PrismaClient({
