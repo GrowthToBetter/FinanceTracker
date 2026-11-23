@@ -1,0 +1,45 @@
+{
+  "name": "finance-tracker-api",
+  "version": "1.0.0",
+  "description": "RESTful API for Finance Tracker using Express, TypeScript, and Prisma",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push"
+  },
+  "keywords": [
+    "finance",
+    "tracker",
+    "rest-api",
+    "express",
+    "prisma",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@types/cors": "^2.8.19",
+    "@types/node": "^26.6.6",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.7",
+    "express": "^5.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "uuid": "^9.0.1",
+    "winston": "^3.19.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
+    "@types/uuid": "^10.0.0",
+    "prisma": "^6.19.3"
+  }
+}

@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum WalletType {
+  CASH
+  BANK
+  EWALLET
+  SAVINGS
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum TransactionStatus {
+  POSTED
+  VOIDED
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(255)
+  email        String        @unique @db.VarChar(255)
+  password     String        @db.VarChar(255)
+  token        String?       @unique @db.VarChar(255)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  wallets      Wallet[]
+  budgets      Budget[]
+  notifications Notification[]
+}
+
+model Wallet {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  name         String        @db.VarChar(255)
+  type         WalletType
+  balance      BigInt        @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id])
+  sentTransactions     Transaction[] @relation("FromWallet")
+  receivedTransactions Transaction[] @relation("ToWallet")
+}
+
+model Transaction {
+  id             Int               @id @default(autoincrement())
+  userId         Int
+  fromWalletId   Int
+  toWalletId     Int?
+  categoryId     Int?
+  type           TransactionType
+  status         TransactionStatus @default(POSTED)
+  amount         BigInt
+  note           String?           @db.VarChar(255)
+  idempotencyKey String?           @unique @db.VarChar(255)
+  date           DateTime          @default(now())
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  fromWallet     Wallet            @relation("FromWallet", fields: [fromWalletId], references: [id])
+  toWallet       Wallet?           @relation("ToWallet", fields: [toWalletId], references: [id])
+  category       Category?         @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(100)
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+  budgets      Budget[]
+}
+
+model Budget {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  categoryId Int
+  amount     BigInt
+  month      Int
+  year       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, categoryId, month, year])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String   @db.VarChar(255)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
