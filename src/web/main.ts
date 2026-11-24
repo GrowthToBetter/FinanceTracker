@@ -4,6 +4,7 @@ import { swaggerSpec } from "../docs/swagger.js";
 import { authRouter } from "../route/auth.api.js";
 import { walletRouter } from "../route/wallet.api.js";
 import { categoryRouter } from "../route/category.api.js";
+import { transactionRouter } from "../route/transaction.api.js";
 import { errorMiddleware } from "../middleware/error.middleware.js";
 
 export const app = express();
@@ -22,4 +23,5 @@ app.get("/health", (req, res) => {
 app.use(authRouter);
 app.use(walletRouter);
 app.use(categoryRouter);
+app.use(transactionRouter);
 app.use(errorMiddleware);
