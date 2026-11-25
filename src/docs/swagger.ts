@@ -6,7 +6,8 @@ const options = {
     info: {
       title: "Finance Tracker RESTful API",
       version: "1.0.0",
-      description: "RESTful API documentation for Finance Tracker built with Express, TypeScript, and Prisma",
+      description:
+        "RESTful API documentation for Finance Tracker built with Express, TypeScript, and Prisma",
     },
     servers: [
       {
@@ -50,10 +51,16 @@ const options = {
                 id: { type: "integer", example: 1 },
                 name: { type: "string", example: "Jean R" },
                 email: { type: "string", example: "jean@example.com" },
-                createdAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-23T10:00:00.000Z",
+                },
               },
             },
-            message: { type: "string", example: "User registered successfully" },
+            message: {
+              type: "string",
+              example: "User registered successfully",
+            },
           },
         },
         UserLoginResponse: {
@@ -63,7 +70,10 @@ const options = {
             data: {
               type: "object",
               properties: {
-                token: { type: "string", example: "e8b23f82-a7d5-4a8a-9e5b-38dcfb940e71" },
+                token: {
+                  type: "string",
+                  example: "e8b23f82-a7d5-4a8a-9e5b-38dcfb940e71",
+                },
               },
             },
             message: { type: "string", example: "Login successful" },
@@ -105,8 +115,14 @@ const options = {
                 name: { type: "string", example: "BCA Main Account" },
                 type: { type: "string", example: "BANK" },
                 balance: { type: "integer", example: 10000000 },
-                createdAt: { type: "string", example: "2026-11-23T10:15:00.000Z" },
-                updatedAt: { type: "string", example: "2026-11-23T10:15:00.000Z" },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-23T10:15:00.000Z",
+                },
+                updatedAt: {
+                  type: "string",
+                  example: "2026-11-23T10:15:00.000Z",
+                },
               },
             },
             message: { type: "string", example: "Create wallet success" },
@@ -125,7 +141,10 @@ const options = {
                   name: { type: "string", example: "BCA Main Account" },
                   type: { type: "string", example: "BANK" },
                   balance: { type: "integer", example: 10000000 },
-                  createdAt: { type: "string", example: "2026-11-23T10:15:00.000Z" },
+                  createdAt: {
+                    type: "string",
+                    example: "2026-11-23T10:15:00.000Z",
+                  },
                 },
               },
             },
@@ -155,7 +174,10 @@ const options = {
               properties: {
                 id: { type: "integer", example: 1 },
                 name: { type: "string", example: "Food & Beverage" },
-                createdAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-23T10:00:00.000Z",
+                },
               },
             },
             message: { type: "string", example: "Create category success" },
@@ -186,7 +208,10 @@ const options = {
                 properties: {
                   id: { type: "integer", example: 1 },
                   name: { type: "string", example: "Food & Beverage" },
-                  createdAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+                  createdAt: {
+                    type: "string",
+                    example: "2026-11-23T10:00:00.000Z",
+                  },
                 },
               },
             },
@@ -236,6 +261,274 @@ const options = {
             status: { type: "integer", example: 500 },
             data: { type: "null", example: null },
             message: { type: "string", example: "Internal Server Error" },
+          },
+        },
+        TransactionCreateRequest: {
+          type: "object",
+          required: ["fromWalletId", "type", "amount"],
+          properties: {
+            fromWalletId: { type: "integer", example: 1 },
+            categoryId: { type: "integer", example: 2 },
+            type: {
+              type: "string",
+              enum: ["INCOME", "EXPENSE"],
+              example: "EXPENSE",
+            },
+            amount: { type: "integer", example: 250000 },
+            note: { type: "string", example: "Supermarket groceries" },
+            date: {
+              type: "string",
+              format: "date-time",
+              example: "2026-11-23T12:00:00.000Z",
+            },
+          },
+        },
+        TransactionTransferRequest: {
+          type: "object",
+          required: ["fromWalletId", "toWalletId", "amount"],
+          properties: {
+            fromWalletId: { type: "integer", example: 1 },
+            toWalletId: { type: "integer", example: 3 },
+            amount: { type: "integer", example: 500000 },
+            note: { type: "string", example: "Top up GoPay from BCA" },
+            date: {
+              type: "string",
+              format: "date-time",
+              example: "2026-11-23T12:15:00.000Z",
+            },
+          },
+        },
+        TransactionResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 201 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                userId: { type: "integer", example: 1 },
+                fromWalletId: { type: "integer", example: 1 },
+                toWalletId: { type: "integer", nullable: true, example: null },
+                categoryId: { type: "integer", nullable: true, example: 2 },
+                type: { type: "string", example: "EXPENSE" },
+                status: { type: "string", example: "POSTED" },
+                amount: { type: "integer", example: 250000 },
+                note: {
+                  type: "string",
+                  nullable: true,
+                  example: "Supermarket groceries",
+                },
+                idempotencyKey: {
+                  type: "string",
+                  nullable: true,
+                  example: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+                },
+                date: { type: "string", example: "2026-11-23T12:00:00.000Z" },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-23T12:00:00.000Z",
+                },
+                updatedAt: {
+                  type: "string",
+                  example: "2026-11-23T12:00:00.000Z",
+                },
+              },
+            },
+            message: { type: "string", example: "Create transaction success" },
+          },
+        },
+        TransactionListResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "integer", example: 1 },
+                  fromWalletId: { type: "integer", example: 1 },
+                  toWalletId: {
+                    type: "integer",
+                    nullable: true,
+                    example: null,
+                  },
+                  categoryId: { type: "integer", nullable: true, example: 2 },
+                  type: { type: "string", example: "EXPENSE" },
+                  status: { type: "string", example: "POSTED" },
+                  amount: { type: "integer", example: 250000 },
+                  note: {
+                    type: "string",
+                    nullable: true,
+                    example: "Supermarket groceries",
+                  },
+                  date: { type: "string", example: "2026-11-23T12:00:00.000Z" },
+                },
+              },
+            },
+            paging: {
+              type: "object",
+              properties: {
+                page: { type: "integer", example: 1 },
+                size: { type: "integer", example: 10 },
+                total_page: { type: "integer", example: 1 },
+                total_items: { type: "integer", example: 2 },
+              },
+            },
+            message: { type: "string", example: "Get transactions success" },
+          },
+        },
+        TransactionVoidResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                status: { type: "string", example: "VOIDED" },
+                updatedAt: {
+                  type: "string",
+                  example: "2026-11-23T12:30:00.000Z",
+                },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Transaction voided successfully",
+            },
+          },
+        },
+        BudgetCreateRequest: {
+          type: "object",
+          required: ["categoryId", "amount", "month", "year"],
+          properties: {
+            categoryId: { type: "integer", example: 1 },
+            amount: { type: "integer", example: 3000000 },
+            month: { type: "integer", example: 11 },
+            year: { type: "integer", example: 2026 },
+          },
+        },
+        BudgetUpdateRequest: {
+          type: "object",
+          required: ["amount"],
+          properties: {
+            amount: { type: "integer", example: 3500000 },
+          },
+        },
+        BudgetResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 201 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                userId: { type: "integer", example: 1 },
+                categoryId: { type: "integer", example: 1 },
+                amount: { type: "integer", example: 3000000 },
+                month: { type: "integer", example: 11 },
+                year: { type: "integer", example: 2026 },
+                createdAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+                updatedAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+              },
+            },
+            message: { type: "string", example: "Create budget success" },
+          },
+        },
+        BudgetListResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "integer", example: 1 },
+                  categoryId: { type: "integer", example: 1 },
+                  categoryName: { type: "string", example: "Food, Drinks & Dining" },
+                  amount: { type: "integer", example: 3000000 },
+                  usedAmount: { type: "integer", example: 2450000 },
+                  percentageUsed: { type: "number", example: 81.67 },
+                  month: { type: "integer", example: 11 },
+                  year: { type: "integer", example: 2026 },
+                },
+              },
+            },
+            message: { type: "string", example: "Get budgets success" },
+          },
+        },
+        BudgetDetailResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                userId: { type: "integer", example: 1 },
+                categoryId: { type: "integer", example: 1 },
+                amount: { type: "integer", example: 3000000 },
+                usedAmount: { type: "integer", example: 2450000 },
+                remainingAmount: { type: "integer", example: 550000 },
+                percentageUsed: { type: "number", example: 81.67 },
+                month: { type: "integer", example: 11 },
+                year: { type: "integer", example: 2026 },
+                createdAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+                updatedAt: { type: "string", example: "2026-11-23T10:00:00.000Z" },
+              },
+            },
+            message: { type: "string", example: "Get budget detail success" },
+          },
+        },
+        BudgetDeleteResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+              },
+            },
+            message: { type: "string", example: "Delete budget success" },
+          },
+        },
+        NotificationListResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "integer", example: 1 },
+                  message: {
+                    type: "string",
+                    example: "Warning: Food, Drinks & Dining budget reached 81.67% of monthly limit",
+                  },
+                  isRead: { type: "boolean", example: false },
+                  createdAt: { type: "string", example: "2026-11-23T12:00:00.000Z" },
+                },
+              },
+            },
+            message: { type: "string", example: "Get notifications success" },
+          },
+        },
+        NotificationReadResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                isRead: { type: "boolean", example: true },
+              },
+            },
+            message: { type: "string", example: "Notification marked as read" },
           },
         },
       },

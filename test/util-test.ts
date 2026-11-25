@@ -8,6 +8,9 @@ const removeTestUser = async (email = "testuser@example.com") => {
   });
 
   if (user) {
+    await prismaClient.notification.deleteMany({
+      where: { userId: user.id },
+    });
     await prismaClient.transaction.deleteMany({
       where: { userId: user.id },
     });
@@ -53,9 +56,21 @@ const createTestWallet = async (
 };
 
 const removeTestCategory = async (name = "Test Category") => {
-  await prismaClient.category.deleteMany({
+  const categories = await prismaClient.category.findMany({
     where: { name },
   });
+
+  for (const cat of categories) {
+    await prismaClient.budget.deleteMany({
+      where: { categoryId: cat.id },
+    });
+    await prismaClient.transaction.deleteMany({
+      where: { categoryId: cat.id },
+    });
+    await prismaClient.category.delete({
+      where: { id: cat.id },
+    });
+  }
 };
 
 const createTestCategory = async (name = "Test Category") => {

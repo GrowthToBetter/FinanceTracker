@@ -5,6 +5,8 @@ import { authRouter } from "../route/auth.api.js";
 import { walletRouter } from "../route/wallet.api.js";
 import { categoryRouter } from "../route/category.api.js";
 import { transactionRouter } from "../route/transaction.api.js";
+import { budgetRouter } from "../route/budget.api.js";
+import { notificationRouter } from "../route/notification.api.js";
 import { errorMiddleware } from "../middleware/error.middleware.js";
 
 export const app = express();
@@ -24,4 +26,6 @@ app.use(authRouter);
 app.use(walletRouter);
 app.use(categoryRouter);
 app.use(transactionRouter);
+app.use(budgetRouter);
+app.use(notificationRouter);
 app.use(errorMiddleware);

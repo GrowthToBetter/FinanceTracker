@@ -1,5 +1,6 @@
 import { prismaClient } from "../web/database.js";
 import transactionRepository from "../repository/transaction.repository.js";
+import { checkBudgetThreshold } from "./alert.service.js";
 import { ResponseError } from "../error/response.error.js";
 import { validate } from "../validation/validation.js";
 import {
@@ -19,7 +20,7 @@ const create = async (
   const data = validate(createTransactionValidation, request);
   const amountBigInt = BigInt(data.amount);
 
-  return prismaClient.$transaction(async (tx) => {
+  const result = await prismaClient.$transaction(async (tx) => {
     const wallet = await transactionRepository.lockWallet(tx, data.fromWalletId);
     if (!wallet || wallet.userId !== userId) {
       throw new ResponseError(404, "Wallet not found");
@@ -65,6 +66,12 @@ const create = async (
 
     return transaction;
   });
+
+  if (data.type === "EXPENSE" && data.categoryId) {
+    checkBudgetThreshold(userId, data.categoryId, result.date);
+  }
+
+  return result;
 };
 
 const transfer = async (
@@ -80,7 +87,7 @@ const transfer = async (
 
   const amountBigInt = BigInt(data.amount);
 
-  return prismaClient.$transaction(async (tx) => {
+  const result = await prismaClient.$transaction(async (tx) => {
     const wallets = await transactionRepository.lockWalletsOrdered(
       tx,
       data.fromWalletId,
@@ -128,6 +135,8 @@ const transfer = async (
 
     return transaction;
   });
+
+  return result;
 };
 
 const list = async (userId: number, request: ListTransactionsRequest) => {
