@@ -17,14 +17,17 @@ const createTransferValidation = z.object({
   date: z.string().datetime().optional(),
 });
 
+const isValidDateString = (val: string) => !isNaN(Date.parse(val));
+
 const listTransactionsValidation = z.object({
   page: z.coerce.number().int().min(1).default(1),
   size: z.coerce.number().int().min(1).max(100).default(10),
   type: z.enum(["INCOME", "EXPENSE", "TRANSFER"]).optional(),
+  status: z.enum(["POSTED", "VOIDED"]).optional(),
   walletId: z.coerce.number().int().positive().optional(),
   categoryId: z.coerce.number().int().positive().optional(),
-  startDate: z.string().datetime().optional(),
-  endDate: z.string().datetime().optional(),
+  startDate: z.string().refine(isValidDateString, { message: "Invalid startDate format" }).optional(),
+  endDate: z.string().refine(isValidDateString, { message: "Invalid endDate format" }).optional(),
 });
 
 export type CreateTransactionRequest = z.infer<typeof createTransactionValidation>;

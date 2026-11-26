@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { prismaClient } from "../src/web/database.js";
+import { invalidateDashboardCache } from "../src/web/redis.js";
 import { WalletType } from "@prisma/client";
 
 const removeTestUser = async (email = "testuser@example.com") => {
@@ -8,6 +9,7 @@ const removeTestUser = async (email = "testuser@example.com") => {
   });
 
   if (user) {
+    await invalidateDashboardCache(user.id);
     await prismaClient.notification.deleteMany({
       where: { userId: user.id },
     });

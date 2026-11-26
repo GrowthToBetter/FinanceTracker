@@ -311,13 +311,16 @@ describe("Transaction API", () => {
 
     it("should list transactions with pagination", async () => {
       const response = await request(app)
-        .get("/api/transactions?page=1&size=10")
+        .get("/api/transactions?page=1&size=1")
         .set("Authorization", "test-token");
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("data");
       expect(response.body).toHaveProperty("paging");
-      expect(response.body.data.length).toBe(2);
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.paging.page).toBe(1);
+      expect(response.body.paging.size).toBe(1);
+      expect(response.body.paging.total_page).toBe(2);
       expect(response.body.paging.total_items).toBe(2);
     });
 
@@ -329,6 +332,34 @@ describe("Transaction API", () => {
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(1);
       expect(response.body.data[0].type).toBe("TRANSFER");
+    });
+
+    it("should filter transactions by walletId and categoryId", async () => {
+      const walletRes = await request(app)
+        .get(`/api/transactions?walletId=${wallet2.id}`)
+        .set("Authorization", "test-token");
+
+      expect(walletRes.status).toBe(200);
+      expect(walletRes.body.data.length).toBe(1);
+      expect(walletRes.body.data[0].toWalletId).toBe(wallet2.id);
+
+      const categoryRes = await request(app)
+        .get(`/api/transactions?categoryId=${category.id}`)
+        .set("Authorization", "test-token");
+
+      expect(categoryRes.status).toBe(200);
+      expect(categoryRes.body.data.length).toBe(1);
+      expect(categoryRes.body.data[0].categoryId).toBe(category.id);
+    });
+
+    it("should filter transactions by date range and status", async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const response = await request(app)
+        .get(`/api/transactions?startDate=${today}&endDate=${today}&status=POSTED`)
+        .set("Authorization", "test-token");
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBe(2);
     });
   });
 

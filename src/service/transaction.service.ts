@@ -1,4 +1,5 @@
 import { prismaClient } from "../web/database.js";
+import { invalidateDashboardCache } from "../web/redis.js";
 import transactionRepository from "../repository/transaction.repository.js";
 import { checkBudgetThreshold } from "./alert.service.js";
 import { ResponseError } from "../error/response.error.js";
@@ -66,6 +67,8 @@ const create = async (
 
     return transaction;
   });
+
+  await invalidateDashboardCache(userId);
 
   if (data.type === "EXPENSE" && data.categoryId) {
     checkBudgetThreshold(userId, data.categoryId, result.date);
@@ -136,6 +139,8 @@ const transfer = async (
     return transaction;
   });
 
+  await invalidateDashboardCache(userId);
+
   return result;
 };
 
@@ -179,7 +184,7 @@ const get = async (userId: number, transactionId: number) => {
 };
 
 const voidTransaction = async (userId: number, transactionId: number) => {
-  return prismaClient.$transaction(async (tx) => {
+  const result = await prismaClient.$transaction(async (tx) => {
     const transaction = await tx.transaction.findFirst({
       where: { id: transactionId, userId },
     });
@@ -254,6 +259,10 @@ const voidTransaction = async (userId: number, transactionId: number) => {
       updatedAt: updated.updatedAt,
     };
   });
+
+  await invalidateDashboardCache(userId);
+
+  return result;
 };
 
 export default {

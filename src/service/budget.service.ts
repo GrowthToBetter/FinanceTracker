@@ -1,5 +1,6 @@
 import budgetRepository from "../repository/budget.repository.js";
 import categoryRepository from "../repository/category.repository.js";
+import { invalidateDashboardCache } from "../web/redis.js";
 import { ResponseError } from "../error/response.error.js";
 import { validate } from "../validation/validation.js";
 import {
@@ -44,6 +45,8 @@ const create = async (userId: number, request: CreateBudgetRequest) => {
     month: data.month,
     year: data.year,
   });
+
+  await invalidateDashboardCache(userId);
 
   return budget;
 };
@@ -128,6 +131,7 @@ const deleteBudget = async (userId: number, budgetId: number) => {
   }
 
   await budgetRepository.deleteById(budgetId);
+  await invalidateDashboardCache(userId);
   return { id: budgetId };
 };
 

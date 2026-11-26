@@ -14,6 +14,7 @@
     "prisma:push": "prisma db push"
   },
   "jest": {
+    "testTimeout": 20000,
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
     },
@@ -40,6 +41,7 @@
     "cors": "^2.8.6",
     "dotenv": "^16.4.7",
     "express": "^5.3.0",
+    "ioredis": "^6.1.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
     "tsx": "^4.23.15",

@@ -41,6 +41,10 @@ const findMany = async (
     where.type = filters.type as TransactionType;
   }
 
+  if (filters.status) {
+    where.status = filters.status;
+  }
+
   if (filters.walletId) {
     where.OR = [
       { fromWalletId: filters.walletId },
@@ -58,7 +62,11 @@ const findMany = async (
       where.date.gte = new Date(filters.startDate);
     }
     if (filters.endDate) {
-      where.date.lte = new Date(filters.endDate);
+      const endStr =
+        filters.endDate.length === 10
+          ? `${filters.endDate}T23:59:59.999Z`
+          : filters.endDate;
+      where.date.lte = new Date(endStr);
     }
   }
 

@@ -1,4 +1,5 @@
 import walletRepository from "../repository/wallet.repository.js";
+import { invalidateDashboardCache } from "../web/redis.js";
 import { ResponseError } from "../error/response.error.js";
 import { validate } from "../validation/validation.js";
 import {
@@ -19,6 +20,8 @@ const create = async (userId: number, request: CreateWalletRequest) => {
     type: data.type,
     balance: initialBalance,
   });
+
+  await invalidateDashboardCache(userId);
 
   return wallet;
 };
@@ -57,6 +60,7 @@ const update = async (
   }
 
   const updatedWallet = await walletRepository.update(walletId, userId, data);
+  await invalidateDashboardCache(userId);
   return updatedWallet;
 };
 
@@ -71,6 +75,7 @@ const deleteWallet = async (userId: number, walletId: number) => {
   }
 
   await walletRepository.deleteById(walletId);
+  await invalidateDashboardCache(userId);
 
   return {
     id: walletId,

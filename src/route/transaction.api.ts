@@ -151,6 +151,11 @@ transactionRouter.post(
  *           type: string
  *           enum: [INCOME, EXPENSE, TRANSFER]
  *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [POSTED, VOIDED]
+ *       - in: query
  *         name: walletId
  *         schema:
  *           type: integer

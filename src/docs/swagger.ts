@@ -531,6 +531,64 @@ const options = {
             message: { type: "string", example: "Notification marked as read" },
           },
         },
+        DashboardSummaryResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                totalBalance: { type: "integer", example: 11100000 },
+                monthlyIncome: { type: "integer", example: 15000000 },
+                monthlyExpense: { type: "integer", example: 4250000 },
+                walletsCount: { type: "integer", example: 3 },
+                activeBudgetsCount: { type: "integer", example: 2 },
+                wallets: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: { type: "integer", example: 1 },
+                      name: { type: "string", example: "BCA Payroll Account" },
+                      type: {
+                        type: "string",
+                        enum: ["CASH", "BANK", "EWALLET", "SAVINGS"],
+                        example: "BANK",
+                      },
+                      balance: { type: "integer", example: 10000000 },
+                    },
+                  },
+                },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Get dashboard summary success",
+            },
+          },
+        },
+        DashboardCashflowResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  date: { type: "string", example: "2026-11-22" },
+                  income: { type: "integer", example: 15000000 },
+                  expense: { type: "integer", example: 600000 },
+                  net: { type: "integer", example: 14400000 },
+                },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Get cashflow trends success",
+            },
+          },
+        },
       },
     },
   },
