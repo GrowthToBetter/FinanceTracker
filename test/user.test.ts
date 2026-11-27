@@ -84,3 +84,40 @@ describe("POST /api/auth/login", () => {
     expect(response.status).toBe(401);
   });
 });
+
+describe("GET /api/auth/me & DELETE /api/auth/logout", () => {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it("should get current authenticated user profile", async () => {
+    const response = await request(app)
+      .get("/api/auth/me")
+      .set("Authorization", "test-token");
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.email).toBe("testuser@example.com");
+    expect(response.body.data.name).toBe("Test User");
+    expect(response.body.message).toBe("Get current user success");
+  });
+
+  it("should logout user and invalidate token", async () => {
+    const logoutRes = await request(app)
+      .delete("/api/auth/logout")
+      .set("Authorization", "test-token");
+
+    expect(logoutRes.status).toBe(200);
+    expect(logoutRes.body.data.email).toBe("testuser@example.com");
+    expect(logoutRes.body.message).toBe("Logout successful");
+
+    const meRes = await request(app)
+      .get("/api/auth/me")
+      .set("Authorization", "test-token");
+
+    expect(meRes.status).toBe(401);
+  });
+});

@@ -80,3 +80,40 @@ Accept: application/json
 GET {{baseUrl}}/dashboard/cashflow
 Authorization: Bearer {{token}}
 Accept: application/json
+
+### Create Savings Goal
+POST {{baseUrl}}/savings-goals
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Emergency Fund",
+  "targetAmount": 10000000,
+  "currentAmount": 2500000
+}
+
+### List Savings Goals
+GET {{baseUrl}}/savings-goals
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Request Async Report Export (CSV / JSON)
+POST {{baseUrl}}/reports/export
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "format": "CSV"
+}
+
+### Get Current User Profile
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Logout User
+DELETE {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}
+Accept: application/json

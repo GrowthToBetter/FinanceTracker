@@ -79,6 +79,39 @@ const options = {
             message: { type: "string", example: "Login successful" },
           },
         },
+        UserMeResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                name: { type: "string", example: "Jean R" },
+                email: { type: "string", example: "jean@example.com" },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-23T10:00:00.000Z",
+                },
+              },
+            },
+            message: { type: "string", example: "Get current user success" },
+          },
+        },
+        UserLogoutResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                email: { type: "string", example: "jean@example.com" },
+              },
+            },
+            message: { type: "string", example: "Logout successful" },
+          },
+        },
         WalletCreateRequest: {
           type: "object",
           required: ["name", "type"],
@@ -149,6 +182,19 @@ const options = {
               },
             },
             message: { type: "string", example: "Get wallets success" },
+          },
+        },
+        WalletDeleteResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+              },
+            },
+            message: { type: "string", example: "Delete wallet success" },
           },
         },
         CategoryCreateRequest: {
@@ -586,6 +632,217 @@ const options = {
             message: {
               type: "string",
               example: "Get cashflow trends success",
+            },
+          },
+        },
+        SavingsGoalCreateRequest: {
+          type: "object",
+          required: ["name", "targetAmount"],
+          properties: {
+            name: { type: "string", example: "Emergency Fund" },
+            targetAmount: { type: "integer", example: 10000000 },
+            currentAmount: { type: "integer", example: 2500000 },
+            walletId: { type: "integer", example: 1 },
+            deadline: {
+              type: "string",
+              format: "date-time",
+              example: "2026-12-31T23:59:59.000Z",
+            },
+          },
+        },
+        SavingsGoalUpdateRequest: {
+          type: "object",
+          properties: {
+            name: { type: "string", example: "Emergency Fund" },
+            targetAmount: { type: "integer", example: 12000000 },
+            currentAmount: { type: "integer", example: 5000000 },
+            walletId: { type: "integer", nullable: true, example: 1 },
+            deadline: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+              example: "2026-12-31T23:59:59.000Z",
+            },
+          },
+        },
+        SavingsGoalResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 201 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+                userId: { type: "integer", example: 1 },
+                walletId: { type: "integer", nullable: true, example: 1 },
+                name: { type: "string", example: "Emergency Fund" },
+                targetAmount: { type: "integer", example: 10000000 },
+                currentAmount: { type: "integer", example: 2500000 },
+                remainingAmount: { type: "integer", example: 7500000 },
+                percentageAchieved: { type: "number", example: 25 },
+                isAchieved: { type: "boolean", example: false },
+                deadline: {
+                  type: "string",
+                  nullable: true,
+                  example: "2026-12-31T23:59:59.000Z",
+                },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-27T10:00:00.000Z",
+                },
+                updatedAt: {
+                  type: "string",
+                  example: "2026-11-27T10:00:00.000Z",
+                },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Create savings goal success",
+            },
+          },
+        },
+        SavingsGoalListResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "integer", example: 1 },
+                  userId: { type: "integer", example: 1 },
+                  walletId: { type: "integer", nullable: true, example: 1 },
+                  name: { type: "string", example: "Emergency Fund" },
+                  targetAmount: { type: "integer", example: 10000000 },
+                  currentAmount: { type: "integer", example: 2500000 },
+                  remainingAmount: { type: "integer", example: 7500000 },
+                  percentageAchieved: { type: "number", example: 25 },
+                  isAchieved: { type: "boolean", example: false },
+                  deadline: {
+                    type: "string",
+                    nullable: true,
+                    example: "2026-12-31T23:59:59.000Z",
+                  },
+                  createdAt: {
+                    type: "string",
+                    example: "2026-11-27T10:00:00.000Z",
+                  },
+                  updatedAt: {
+                    type: "string",
+                    example: "2026-11-27T10:00:00.000Z",
+                  },
+                },
+              },
+            },
+            message: { type: "string", example: "Get savings goals success" },
+          },
+        },
+        SavingsGoalDeleteResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                id: { type: "integer", example: 1 },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Delete savings goal success",
+            },
+          },
+        },
+        ReportExportRequest: {
+          type: "object",
+          properties: {
+            format: {
+              type: "string",
+              enum: ["CSV", "JSON"],
+              example: "CSV",
+            },
+            type: {
+              type: "string",
+              enum: ["INCOME", "EXPENSE", "TRANSFER"],
+              example: "EXPENSE",
+            },
+            status: {
+              type: "string",
+              enum: ["POSTED", "VOIDED"],
+              example: "POSTED",
+            },
+            walletId: { type: "integer", example: 1 },
+            categoryId: { type: "integer", example: 1 },
+            startDate: { type: "string", example: "2026-11-01" },
+            endDate: { type: "string", example: "2026-11-30" },
+          },
+        },
+        ReportExportQueuedResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 202 },
+            data: {
+              type: "object",
+              properties: {
+                jobId: {
+                  type: "string",
+                  example: "6c84fb90-12c4-11e1-840d-7b25c5ee775a",
+                },
+                format: { type: "string", example: "CSV" },
+                status: { type: "string", example: "PENDING" },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-27T10:00:00.000Z",
+                },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Export report job queued",
+            },
+          },
+        },
+        ReportExportDetailResponse: {
+          type: "object",
+          properties: {
+            status: { type: "integer", example: 200 },
+            data: {
+              type: "object",
+              properties: {
+                jobId: {
+                  type: "string",
+                  example: "6c84fb90-12c4-11e1-840d-7b25c5ee775a",
+                },
+                format: { type: "string", example: "CSV" },
+                status: {
+                  type: "string",
+                  enum: ["PENDING", "COMPLETED", "FAILED"],
+                  example: "COMPLETED",
+                },
+                totalRecords: { type: "integer", example: 2 },
+                content: {
+                  oneOf: [
+                    { type: "string" },
+                    { type: "array", items: { type: "object" } },
+                  ],
+                  nullable: true,
+                },
+                createdAt: {
+                  type: "string",
+                  example: "2026-11-27T10:00:00.000Z",
+                },
+                completedAt: {
+                  type: "string",
+                  nullable: true,
+                  example: "2026-11-27T10:00:01.000Z",
+                },
+              },
+            },
+            message: {
+              type: "string",
+              example: "Get export report success",
             },
           },
         },

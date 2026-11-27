@@ -19,6 +19,9 @@ const removeTestUser = async (email = "testuser@example.com") => {
     await prismaClient.budget.deleteMany({
       where: { userId: user.id },
     });
+    await prismaClient.savingsGoal.deleteMany({
+      where: { userId: user.id },
+    });
     await prismaClient.wallet.deleteMany({
       where: { userId: user.id },
     });

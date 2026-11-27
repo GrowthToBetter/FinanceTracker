@@ -204,11 +204,7 @@ walletRouter.patch("/api/wallets/:id", walletController.update);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status: { type: integer, example: 200 }
- *                 data: { type: object, properties: { id: { type: integer, example: 1 } } }
- *                 message: { type: string, example: "Delete wallet success" }
+ *               $ref: '#/components/schemas/WalletDeleteResponse'
  *       400:
  *         description: Bad Request
  *         content:

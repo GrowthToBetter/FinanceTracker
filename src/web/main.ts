@@ -8,6 +8,8 @@ import { transactionRouter } from "../route/transaction.api.js";
 import { budgetRouter } from "../route/budget.api.js";
 import { notificationRouter } from "../route/notification.api.js";
 import { dashboardRouter } from "../route/dashboard.api.js";
+import { savingsGoalRouter } from "../route/savings-goal.api.js";
+import { reportRouter } from "../route/report.api.js";
 import { errorMiddleware } from "../middleware/error.middleware.js";
 
 export const app = express();
@@ -30,4 +32,6 @@ app.use(transactionRouter);
 app.use(budgetRouter);
 app.use(notificationRouter);
 app.use(dashboardRouter);
+app.use(savingsGoalRouter);
+app.use(reportRouter);
 app.use(errorMiddleware);

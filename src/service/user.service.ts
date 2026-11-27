@@ -54,7 +54,37 @@ const login = async (request: LoginUserRequest) => {
   };
 };
 
+const getMe = async (userId: number) => {
+  const user = await userRepository.findById(userId);
+  if (!user) {
+    throw new ResponseError(404, "User not found");
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+  };
+};
+
+const logout = async (userId: number) => {
+  const user = await userRepository.findById(userId);
+  if (!user) {
+    throw new ResponseError(404, "User not found");
+  }
+
+  const updated = await userRepository.updateToken(userId, null);
+
+  return {
+    id: updated.id,
+    email: updated.email,
+  };
+};
+
 export default {
   register,
   login,
+  getMe,
+  logout,
 };
