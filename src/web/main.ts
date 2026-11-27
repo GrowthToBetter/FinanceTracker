@@ -1,12 +1,37 @@
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "../docs/swagger.js";
+import { authRouter } from "../route/auth.api.js";
+import { walletRouter } from "../route/wallet.api.js";
+import { categoryRouter } from "../route/category.api.js";
+import { transactionRouter } from "../route/transaction.api.js";
+import { budgetRouter } from "../route/budget.api.js";
+import { notificationRouter } from "../route/notification.api.js";
+import { dashboardRouter } from "../route/dashboard.api.js";
+import { savingsGoalRouter } from "../route/savings-goal.api.js";
+import { reportRouter } from "../route/report.api.js";
 import { errorMiddleware } from "../middleware/error.middleware.js";
 
 export const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/api-docs.json", (req, res) => {
+  res.json(swaggerSpec);
+});
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK" });
 });
 
+app.use(authRouter);
+app.use(walletRouter);
+app.use(categoryRouter);
+app.use(transactionRouter);
+app.use(budgetRouter);
+app.use(notificationRouter);
+app.use(dashboardRouter);
+app.use(savingsGoalRouter);
+app.use(reportRouter);
 app.use(errorMiddleware);
